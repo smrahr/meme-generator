@@ -47,7 +47,10 @@ export const ImageLabel = styled.label`
   text-align: center;
   background-color: #bd93f9;
   width: 100%;
-  height: 80%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* flex-grow: 1; */
 `;
 
