@@ -1,20 +1,38 @@
+import React, { useState } from "react";
 import * as S from "./styles";
 import Text from "./pages/Text";
 
 function App() {
   const textTitles = ["Top text", "Bottom text"];
+  const [imgUrl, setImgUrl] = useState("");
+  const [imgName, setImgName] = useState("");
+  const [imgSize, setImgSize] = useState("");
+
+  const uploadImageHandler = (e) => {
+    setImgName(e.target.files[0].name);
+    setImgSize(e.target.files[0].size);
+    setImgUrl(URL.createObjectURL(e.target.files[0]));
+    e.target.previousSibling.style.display = "none";
+    e.target.nextSibling.nextSibling.style.display = "block";
+  };
   return (
     <S.Container>
       <S.Header>The MEME Generator</S.Header>
       <S.Body>
         <S.ImageContainer>
-          <S.ImageLabel for="up-img">
+          <S.ImageLabel htmlFor="up-img">
             Upload an image from your computer
           </S.ImageLabel>
-          <S.ImageInput id="up-img" type="file" />
+          <S.ImageInput
+            id="up-img"
+            type="file"
+            accept="image/*"
+            onChange={uploadImageHandler}
+          />
+          <img src={imgUrl} />
           <S.ImageInfo>
-            <S.ImageName>Image name:</S.ImageName>
-            <S.ImageSize>Image size:</S.ImageSize>
+            <S.ImageName>Image name:{imgName}</S.ImageName>
+            <S.ImageSize>Image size:{imgSize}</S.ImageSize>
           </S.ImageInfo>
         </S.ImageContainer>
         <S.InformationContainer>
@@ -24,7 +42,7 @@ function App() {
           ))}
           <S.TextInclude>
             <S.IncludeInput type="checkbox" id="include-txt" />
-            <S.IncludeLabel for="include-txt">
+            <S.IncludeLabel htmlFor="include-txt">
               Text outside the image
             </S.IncludeLabel>
           </S.TextInclude>

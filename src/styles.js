@@ -38,10 +38,6 @@ export const ImageContainer = styled.div`
   align-items: stretch;
 `;
 export const ImageLabel = styled.label`
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
   font-size: 30px;
   color: #282a36;
   text-align: center;
@@ -51,19 +47,21 @@ export const ImageLabel = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* flex-grow: 1; */
+  cursor: pointer;
 `;
 
 export const ImageInput = styled.input`
-  /* width: 100%;
-  height: 500px; */
   opacity: 0;
   cursor: pointer;
-  /* background-color: #bd93f9; */
 `;
 
-export const ImageInfo = styled.div``;
-export const ImageName = styled.div``;
+export const ImageInfo = styled.div`
+  display: none;
+  margin-top: 15px;
+`;
+export const ImageName = styled.div`
+  padding: 5px 0;
+`;
 export const ImageSize = styled.div``;
 
 export const InformationContainer = styled.div`
