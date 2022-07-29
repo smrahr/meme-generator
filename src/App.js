@@ -4,44 +4,99 @@ import Text from "./pages/Text";
 
 function App() {
   const textTitles = ["Top text", "Bottom text"];
-  const [imgUrl, setImgUrl] = useState("");
-  const [imgName, setImgName] = useState("");
-  const [imgSize, setImgSize] = useState("");
+  const [imgUrl, setImgUrl] = useState(null);
+  const [imgName, setImgName] = useState(null);
+  const [imgSize, setImgSize] = useState(null);
+  const [inputEnable, setInputEnable] = useState(true);
+
+  const [imgTitleDetail, setImgTitleDetail] = useState([
+    { text: "Top text", textPos: 5, textSize: 2 },
+    { text: "Bottom text", textPos: 5, textSize: 2 },
+  ]);
 
   const uploadImageHandler = (e) => {
     setImgName(e.target.files[0].name);
     setImgSize(e.target.files[0].size);
     setImgUrl(URL.createObjectURL(e.target.files[0]));
-    e.target.previousSibling.style.display = "none";
-    e.target.nextSibling.nextSibling.style.display = "block";
+    // e.target.previousSibling.style.display = "none";
+    // e.target.nextSibling.style.display = "block";
+    // e.target.nextSibling.nextSibling.style.display = "block"; // drilling
+    setInputEnable(false);
+  };
+
+  const titleHandler = (index, title) => {
+    setImgTitleDetail((prev) => {
+      const newValue = [...prev];
+      newValue[index] = title;
+      return newValue;
+    });
   };
   return (
     <S.Container>
       <S.Header>The MEME Generator</S.Header>
       <S.Body>
         <S.ImageContainer>
-          <S.ImageLabel htmlFor="up-img">
-            Upload an image from your computer
-          </S.ImageLabel>
+          {!imgUrl && (
+            <S.ImageLabel htmlFor="up-img">
+              Upload an image from your computer
+            </S.ImageLabel>
+          )}
           <S.ImageInput
             id="up-img"
             type="file"
             accept="image/*"
             onChange={uploadImageHandler}
           />
-          <img src={imgUrl} />
-          <S.ImageInfo>
-            <S.ImageName>Image name:{imgName}</S.ImageName>
-            <S.ImageSize>Image size:{imgSize}</S.ImageSize>
-          </S.ImageInfo>
+          {imgUrl && (
+            <S.ImgBox>
+              <S.Img src={imgUrl} />
+              <S.TopTitle
+                style={{
+                  top: `${imgTitleDetail[0].textPos}px`,
+                  fontSize: `${imgTitleDetail[0].textSize * 10}px`,
+                }}
+              >
+                {imgTitleDetail[0].text}
+              </S.TopTitle>
+              <S.BottomTitle
+                style={{
+                  bottom: `${imgTitleDetail[1].textPos}px`,
+                  fontSize: `${imgTitleDetail[1].textSize * 10}px`,
+                }}
+              >
+                {imgTitleDetail[1].text}
+              </S.BottomTitle>
+            </S.ImgBox>
+          )}
+          {imgName && imgSize && (
+            <S.ImageInfo>
+              <S.ImageName>
+                Image name: <span>{imgName}</span>
+              </S.ImageName>
+              <S.ImageSize>
+                Image size: <span>{imgSize / 1000} KB</span>
+              </S.ImageSize>
+            </S.ImageInfo>
+          )}
         </S.ImageContainer>
         <S.InformationContainer>
           <S.InformationTitle>Set your text here</S.InformationTitle>
           {textTitles.map((textTitle, index) => (
-            <Text key={index} textTitle={textTitle} />
+            <Text
+              key={index}
+              index={index}
+              title={textTitle}
+              inputEnable={inputEnable}
+              onValueChange={titleHandler}
+              value={imgTitleDetail[index]}
+            />
           ))}
           <S.TextInclude>
-            <S.IncludeInput type="checkbox" id="include-txt" />
+            <S.IncludeInput
+              type="checkbox"
+              id="include-txt"
+              disabled={inputEnable}
+            />
             <S.IncludeLabel htmlFor="include-txt">
               Text outside the image
             </S.IncludeLabel>
@@ -49,8 +104,12 @@ function App() {
         </S.InformationContainer>
       </S.Body>
       <S.Footer>
-        <S.NewMemeButton>Generate a new MEME</S.NewMemeButton>
-        <S.ResetMemeButton>Reset MEME settings</S.ResetMemeButton>
+        <S.NewMemeButton disabled={inputEnable}>
+          Generate a new MEME
+        </S.NewMemeButton>
+        <S.ResetMemeButton disabled={inputEnable}>
+          Reset MEME settings
+        </S.ResetMemeButton>
       </S.Footer>
     </S.Container>
   );

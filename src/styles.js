@@ -29,7 +29,6 @@ export const Body = styled.div`
 
 export const ImageContainer = styled.div`
   width: 48%;
-  height: 100%;
   /* background-color: #bd93f9; */
   position: relative;
   height: 100%;
@@ -50,19 +49,53 @@ export const ImageLabel = styled.label`
   cursor: pointer;
 `;
 
+export const ImgBox = styled.div`
+  position: relative;
+`;
+
+export const Img = styled.img`
+  width: 100%;
+  object-fit: cover;
+`;
+
 export const ImageInput = styled.input`
   opacity: 0;
   cursor: pointer;
 `;
 
+export const TopTitle = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+`;
+
+export const BottomTitle = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+`;
+
 export const ImageInfo = styled.div`
-  display: none;
+  color: #50fa7b;
   margin-top: 15px;
 `;
 export const ImageName = styled.div`
   padding: 5px 0;
+  & > span {
+    color: white;
+  }
 `;
-export const ImageSize = styled.div``;
+export const ImageSize = styled.div`
+  & > span {
+    color: white;
+  }
+`;
 
 export const InformationContainer = styled.div`
   width: 48%;
@@ -85,6 +118,12 @@ export const IncludeInput = styled.input`
   &:checked + label::after {
     background-color: #8be9fd;
     left: 20px;
+  }
+
+  &:disabled + label::after,
+  &:disabled + label::before {
+    cursor: not-allowed;
+    opacity: 0.2;
   }
 `;
 
@@ -139,7 +178,15 @@ export const NewMemeButton = styled.button`
     outline: none;
     cursor: pointer;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background-color: #f1fa8c;
+    color: #282a36;
+  }
 `;
+
 export const ResetMemeButton = styled.button`
   color: #282a36;
   background-color: #f1fa8c;
@@ -158,5 +205,12 @@ export const ResetMemeButton = styled.button`
     border: none;
     outline: none;
     cursor: pointer;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background-color: #f1fa8c;
+    color: #282a36;
   }
 `;
