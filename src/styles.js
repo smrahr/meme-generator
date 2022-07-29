@@ -51,6 +51,9 @@ export const ImageLabel = styled.label`
 
 export const ImgBox = styled.div`
   position: relative;
+  &.outer {
+    margin: 30px 0;
+  }
 `;
 
 export const Img = styled.img`

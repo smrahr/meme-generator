@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as S from "./styles";
 import Text from "./pages/Text";
 
@@ -8,6 +8,7 @@ function App() {
   const [imgName, setImgName] = useState(null);
   const [imgSize, setImgSize] = useState(null);
   const [inputEnable, setInputEnable] = useState(true);
+  const [includeText, setIncludeText] = useState(true);
 
   const [imgTitleDetail, setImgTitleDetail] = useState([
     { text: "Top text", textPos: 5, textSize: 2 },
@@ -18,9 +19,6 @@ function App() {
     setImgName(e.target.files[0].name);
     setImgSize(e.target.files[0].size);
     setImgUrl(URL.createObjectURL(e.target.files[0]));
-    // e.target.previousSibling.style.display = "none";
-    // e.target.nextSibling.style.display = "block";
-    // e.target.nextSibling.nextSibling.style.display = "block"; // drilling
     setInputEnable(false);
   };
 
@@ -31,6 +29,15 @@ function App() {
       return newValue;
     });
   };
+
+  const onIncludeHandler = (e) => {
+    console.log("ok");
+    setIncludeText(false);
+  };
+
+  useEffect(() => {
+    console.log(includeText);
+  }, [includeText]);
   return (
     <S.Container>
       <S.Header>The MEME Generator</S.Header>
@@ -49,7 +56,7 @@ function App() {
           />
           {imgUrl && (
             <S.ImgBox>
-              <S.Img src={imgUrl} />
+              <S.Img src={imgUrl} className={includeText ? "outer" : null} />
               <S.TopTitle
                 style={{
                   top: `${imgTitleDetail[0].textPos}px`,
@@ -104,7 +111,7 @@ function App() {
         </S.InformationContainer>
       </S.Body>
       <S.Footer>
-        <S.NewMemeButton disabled={inputEnable}>
+        <S.NewMemeButton disabled={inputEnable} onChange={onIncludeHandler}>
           Generate a new MEME
         </S.NewMemeButton>
         <S.ResetMemeButton disabled={inputEnable}>
