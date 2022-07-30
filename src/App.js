@@ -31,8 +31,8 @@ function App() {
   };
 
   const onIncludeHandler = (e) => {
+    setIncludeText((currentvalue) => !currentvalue);
     console.log("ok");
-    setIncludeText(false);
   };
 
   useEffect(() => {
@@ -56,7 +56,7 @@ function App() {
           />
           {imgUrl && (
             <S.ImgBox>
-              <S.Img src={imgUrl} className={includeText ? "outer" : null} />
+              <S.Img src={imgUrl} className={includeText ? "outer" : ""} />
               <S.TopTitle
                 style={{
                   top: `${imgTitleDetail[0].textPos}px`,
@@ -103,6 +103,7 @@ function App() {
               type="checkbox"
               id="include-txt"
               disabled={inputEnable}
+              onChange={onIncludeHandler}
             />
             <S.IncludeLabel htmlFor="include-txt">
               Text outside the image

@@ -51,14 +51,14 @@ export const ImageLabel = styled.label`
 
 export const ImgBox = styled.div`
   position: relative;
-  &.outer {
-    margin: 30px 0;
-  }
 `;
 
 export const Img = styled.img`
   width: 100%;
   object-fit: cover;
+  &.outer {
+    margin: 30px 0;
+  }
 `;
 
 export const ImageInput = styled.input`
@@ -153,7 +153,7 @@ export const IncludeLabel = styled.label`
     left: 0;
     background-color: #bbbabc;
     border-radius: 20px;
-    transition: all 1s;
+    transition: all 500ms;
   }
 `;
 
