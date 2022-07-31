@@ -1,24 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import html2canvas from "html2canvas";
+import downloadjs from "downloadjs";
 import * as S from "./styles";
 import Text from "./pages/Text";
 
 function App() {
   const textTitles = ["Top text", "Bottom text"];
-  const [imgUrl, setImgUrl] = useState(null);
-  const [imgName, setImgName] = useState(null);
-  const [imgSize, setImgSize] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  // const [imgUrl, setImgUrl] = useState(null);
+  // const [imgName, setImgName] = useState(null);
+  // const [imgSize, setImgSize] = useState(null);
   const [inputEnable, setInputEnable] = useState(true);
-  const [includeText, setIncludeText] = useState(true);
+  const [includeText, setIncludeText] = useState(false);
+  const imageInputRef = useRef();
+  const imgRef = useRef();
 
   const [imgTitleDetail, setImgTitleDetail] = useState([
     { text: "Top text", textPos: 5, textSize: 2 },
     { text: "Bottom text", textPos: 5, textSize: 2 },
   ]);
 
+  const getSelectedImageUrl = () =>
+    selectedImage ? URL.createObjectURL(selectedImage) : null;
+
   const uploadImageHandler = (e) => {
-    setImgName(e.target.files[0].name);
-    setImgSize(e.target.files[0].size);
-    setImgUrl(URL.createObjectURL(e.target.files[0]));
+    const [selectedFile] = e.target.files;
+    setSelectedImage(selectedFile);
+
+    // setImgName(e.target.files[0].name);
+    // setImgSize(e.target.files[0].size);
+    // setImgUrl(URL.createObjectURL(e.target.files[0]));
+
     setInputEnable(false);
   };
 
@@ -35,28 +47,50 @@ function App() {
     console.log("ok");
   };
 
-  useEffect(() => {
-    console.log(includeText);
-  }, [includeText]);
+  const onGenerateButtonHandler = async () => {
+    const canvas = await html2canvas(imgRef);
+    const dataURL = canvas.toDataURL("image/png");
+    downloadjs(dataURL, "download.png", "image/png");
+  };
+
+  const onResetButtonHandler = () => {
+    imageInputRef.current.value = "";
+    setSelectedImage(null);
+    // setImgUrl(null);
+    // setImgName(null);
+    // setImgSize(null);
+
+    setInputEnable(true);
+    setImgTitleDetail([
+      { text: "Top text", textPos: 5, textSize: 2 },
+      { text: "Bottom text", textPos: 5, textSize: 2 },
+    ]);
+    setIncludeText(false);
+  };
+
   return (
     <S.Container>
       <S.Header>The MEME Generator</S.Header>
       <S.Body>
         <S.ImageContainer>
-          {!imgUrl && (
+          {!selectedImage && (
             <S.ImageLabel htmlFor="up-img">
               Upload an image from your computer
             </S.ImageLabel>
           )}
           <S.ImageInput
+            ref={imageInputRef}
             id="up-img"
             type="file"
             accept="image/*"
             onChange={uploadImageHandler}
           />
-          {imgUrl && (
-            <S.ImgBox>
-              <S.Img src={imgUrl} className={includeText ? "outer" : ""} />
+          {selectedImage && (
+            <S.ImgBox ref={imgRef}>
+              <S.Img
+                src={getSelectedImageUrl()}
+                className={includeText ? "outer" : ""}
+              />
               <S.TopTitle
                 style={{
                   top: `${imgTitleDetail[0].textPos}px`,
@@ -75,13 +109,13 @@ function App() {
               </S.BottomTitle>
             </S.ImgBox>
           )}
-          {imgName && imgSize && (
+          {selectedImage && (
             <S.ImageInfo>
               <S.ImageName>
-                Image name: <span>{imgName}</span>
+                Image name: <span>{selectedImage.name}</span>
               </S.ImageName>
               <S.ImageSize>
-                Image size: <span>{imgSize / 1000} KB</span>
+                Image size: <span>{selectedImage.size / 1000} KB</span>
               </S.ImageSize>
             </S.ImageInfo>
           )}
@@ -104,6 +138,7 @@ function App() {
               id="include-txt"
               disabled={inputEnable}
               onChange={onIncludeHandler}
+              value={includeText}
             />
             <S.IncludeLabel htmlFor="include-txt">
               Text outside the image
@@ -112,10 +147,16 @@ function App() {
         </S.InformationContainer>
       </S.Body>
       <S.Footer>
-        <S.NewMemeButton disabled={inputEnable} onChange={onIncludeHandler}>
+        <S.NewMemeButton
+          disabled={inputEnable}
+          onClick={onGenerateButtonHandler}
+        >
           Generate a new MEME
         </S.NewMemeButton>
-        <S.ResetMemeButton disabled={inputEnable}>
+        <S.ResetMemeButton
+          disabled={inputEnable}
+          onClick={onResetButtonHandler}
+        >
           Reset MEME settings
         </S.ResetMemeButton>
       </S.Footer>
