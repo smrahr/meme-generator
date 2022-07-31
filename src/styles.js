@@ -56,6 +56,7 @@ export const ImgBox = styled.div`
 export const Img = styled.img`
   width: 100%;
   object-fit: cover;
+  display: block;
   &.outer {
     margin: 30px 0;
   }

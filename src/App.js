@@ -13,7 +13,7 @@ function App() {
   const [inputEnable, setInputEnable] = useState(true);
   const [includeText, setIncludeText] = useState(false);
   const imageInputRef = useRef();
-  const imgRef = useRef();
+  const imageBoxRef = useRef();
 
   const [imgTitleDetail, setImgTitleDetail] = useState([
     { text: "Top text", textPos: 5, textSize: 2 },
@@ -48,7 +48,9 @@ function App() {
   };
 
   const onGenerateButtonHandler = async () => {
-    const canvas = await html2canvas(imgRef);
+    const canvas = await html2canvas(imageBoxRef.current, {
+      backgroundColor: null,
+    });
     const dataURL = canvas.toDataURL("image/png");
     downloadjs(dataURL, "download.png", "image/png");
   };
@@ -86,7 +88,7 @@ function App() {
             onChange={uploadImageHandler}
           />
           {selectedImage && (
-            <S.ImgBox ref={imgRef}>
+            <S.ImgBox ref={imageBoxRef}>
               <S.Img
                 src={getSelectedImageUrl()}
                 className={includeText ? "outer" : ""}
